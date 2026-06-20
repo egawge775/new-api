@@ -88,10 +88,11 @@ func Relay(c *gin.Context, relayFormat types.RelayFormat) {
 
 	defer func() {
 		if newAPIError != nil {
-			// 最终兜底：上游额度耗尽类错误（原始 429，或已被改写为该封禁文案的错误）
+			// 最终兜底：上游额度耗尽类错误（原始 402 / 429，或已被改写为该文案的错误）
 			// 统一以 HTTP 503 + 固定文案返回。放在所有重试 / 状态码复写之后、c.JSON 之前，
 			// 确保写回客户端的状态码一定是 503。
-			if newAPIError.StatusCode == http.StatusTooManyRequests ||
+			if newAPIError.StatusCode == http.StatusPaymentRequired ||
+				newAPIError.StatusCode == http.StatusTooManyRequests ||
 				strings.Contains(newAPIError.Error(), "No available accounts") {
 				newAPIError = types.NewOpenAIError(
 					errors.New("bad response status code 503, message: No available accounts: no available accounts"),
