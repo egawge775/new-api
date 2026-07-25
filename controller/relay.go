@@ -93,6 +93,8 @@ func Relay(c *gin.Context, relayFormat types.RelayFormat) {
 			// 确保写回客户端的状态码一定是 503。
 			if newAPIError.StatusCode == http.StatusPaymentRequired ||
 				newAPIError.StatusCode == http.StatusTooManyRequests ||
+				newAPIError.StatusCode == http.StatusForbidden ||
+				newAPIError.StatusCode == http.StatusServiceUnavailable ||
 				strings.Contains(newAPIError.Error(), "No available accounts") {
 				newAPIError = types.NewOpenAIError(
 					errors.New("bad response status code 503, message: No available accounts: no available accounts"),
