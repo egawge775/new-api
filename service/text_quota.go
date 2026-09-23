@@ -55,6 +55,8 @@ type textQuotaSummary struct {
 	AudioInputPrice          float64
 	ImageGenerationCallPrice float64
 	ToolCallSurchargeQuota   decimal.Decimal
+	// EmptyResponseWaived 为 true 时表示本次请求命中「空回不扣费」（输出为 0），配额已被置 0
+	EmptyResponseWaived bool
 }
 
 func cacheWriteTokensTotal(summary textQuotaSummary) int {
@@ -346,6 +348,13 @@ func PostTextConsumeQuota(ctx *gin.Context, relayInfo *relaycommon.RelayInfo, us
 		}
 	}
 
+	// 空回不扣费：上游返回的输出 token 为 0（空回）时整个请求免单。
+	// 必须放在分级计费（tiered）之后，确保表达式计费结果同样被清零。
+	if ShouldWaiveEmptyResponseQuota(relayInfo, summary.CompletionTokens) {
+		summary.EmptyResponseWaived = true
+		summary.Quota = 0
+	}
+
 	if summary.WebSearchCallCount > 0 {
 		extraContent = append(extraContent, fmt.Sprintf("Web Search 调用 %d 次，调用花费 %s", summary.WebSearchCallCount, decimal.NewFromFloat(summary.WebSearchPrice).Mul(decimal.NewFromInt(int64(summary.WebSearchCallCount))).Div(decimal.NewFromInt(1000)).Mul(decimal.NewFromFloat(summary.GroupRatio)).Mul(decimal.NewFromFloat(common.QuotaPerUnit)).String()))
 	}
@@ -365,6 +374,10 @@ func PostTextConsumeQuota(ctx *gin.Context, relayInfo *relaycommon.RelayInfo, us
 	if summary.TotalTokens == 0 {
 		extraContent = append(extraContent, "上游没有返回计费信息，无法扣费（可能是上游超时）")
 		logger.LogError(ctx, fmt.Sprintf("total tokens is 0, cannot consume quota, userId %d, channelId %d, tokenId %d, model %s， pre-consumed quota %d", relayInfo.UserId, relayInfo.ChannelId, relayInfo.TokenId, summary.ModelName, relayInfo.FinalPreConsumedQuota))
+	} else if summary.EmptyResponseWaived {
+		// 空回不扣费：请求成功但没有任何补全输出，不扣费也不计入已用额度
+		extraContent = append(extraContent, "上游返回空内容（输出 token 为 0），空回不扣费")
+		logger.LogError(ctx, fmt.Sprintf("empty response, no quota consumed, userId %d, channelId %d, tokenId %d, model %s, prompt tokens %d, pre-consumed quota %d", relayInfo.UserId, relayInfo.ChannelId, relayInfo.TokenId, summary.ModelName, summary.PromptTokens, relayInfo.FinalPreConsumedQuota))
 	} else {
 		model.UpdateUserUsedQuotaAndRequestCount(relayInfo.UserId, summary.Quota)
 		model.UpdateChannelUsedQuota(relayInfo.ChannelId, summary.Quota)

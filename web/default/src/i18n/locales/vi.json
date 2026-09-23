@@ -4538,6 +4538,8 @@
     "When enabled, users can pick this group when creating tokens.": "Khi bật, người dùng có thể chọn nhóm này khi tạo token.",
     "When enabled, violation requests will incur additional charges.": "Khi bật, các yêu cầu vi phạm sẽ phải chịu phí bổ sung.",
     "When enabled, zero-cost models also pre-consume quota before final settlement.": "Khi được bật, các mô hình không tốn phí cũng trừ trước hạn mức trước khi quyết toán cuối cùng.",
+    "No Charge for Empty Responses": "Không tính phí cho phản hồi rỗng",
+    "When enabled, requests that produce no completion output (zero output tokens, i.e. an empty upstream response) are not charged at all.": "Khi được bật, các yêu cầu không có nội dung hoàn thành (0 token đầu ra, tức phản hồi rỗng từ upstream) sẽ hoàn toàn không bị tính phí.",
     "When no conditions are set, the operation always executes.": "Khi không có điều kiện, thao tác luôn được thực thi.",
     "When performance monitoring is enabled and system resource usage exceeds the set threshold, new Relay requests will be rejected.": "Khi giám sát hiệu suất được bật và mức sử dụng tài nguyên vượt quá ngưỡng, các yêu cầu Relay mới sẽ bị từ chối.",
     "When running in containers or ephemeral environments, ensure the SQLite file is mapped to persistent storage to avoid data loss on restart.": "Khi chạy trong container hoặc môi trường tạm thời, hãy đảm bảo tệp SQLite được ánh xạ vào bộ nhớ lưu trữ bền vững để tránh mất dữ liệu khi khởi động lại.",

@@ -37,6 +37,7 @@ export default function SettingsCreditLimit(props) {
     QuotaForInviter: '',
     QuotaForInvitee: '',
     'quota_setting.enable_free_model_pre_consume': true,
+    'quota_setting.enable_empty_response_no_charge': true,
   });
   const refForm = useRef();
   const [inputsRow, setInputsRow] = useState(inputs);
@@ -196,6 +197,24 @@ export default function SettingsCreditLimit(props) {
                     setInputs({
                       ...inputs,
                       'quota_setting.enable_free_model_pre_consume': value,
+                    })
+                  }
+                />
+              </Col>
+            </Row>
+
+            <Row>
+              <Col>
+                <Form.Switch
+                  label={t('空回不扣费')}
+                  field={'quota_setting.enable_empty_response_no_charge'}
+                  extraText={t(
+                    '开启后，上游没有返回任何补全内容（输出 token 为 0，即空回）的请求完全不扣费，已预扣的额度会全额退回',
+                  )}
+                  onChange={(value) =>
+                    setInputs({
+                      ...inputs,
+                      'quota_setting.enable_empty_response_no_charge': value,
                     })
                   }
                 />

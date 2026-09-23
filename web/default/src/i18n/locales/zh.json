@@ -4538,6 +4538,8 @@
     "When enabled, users can pick this group when creating tokens.": "启用后，用户创建令牌时可以选择该分组。",
     "When enabled, violation requests will incur additional charges.": "开启后，违规请求将额外扣费。",
     "When enabled, zero-cost models also pre-consume quota before final settlement.": "启用后，零成本模型也会在最终结算前预先消耗配额。",
+    "No Charge for Empty Responses": "空回不扣费",
+    "When enabled, requests that produce no completion output (zero output tokens, i.e. an empty upstream response) are not charged at all.": "开启后，上游未返回任何补全内容（输出 token 为 0，即空回）的请求完全不扣费，已预扣的额度会全额退回。",
     "When no conditions are set, the operation always executes.": "没有条件时，默认总是执行该操作。",
     "When performance monitoring is enabled and system resource usage exceeds the set threshold, new Relay requests will be rejected.": "启用性能监控后，当系统资源使用率超过设定阈值时，将拒绝新的 Relay 请求。",
     "When running in containers or ephemeral environments, ensure the SQLite file is mapped to persistent storage to avoid data loss on restart.": "在容器或临时环境中运行时，请确保 SQLite 文件映射到持久存储，以避免重启时数据丢失。",

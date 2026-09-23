@@ -4538,6 +4538,8 @@
     "When enabled, users can pick this group when creating tokens.": "Если включено, пользователи могут выбрать эту группу при создании токенов.",
     "When enabled, violation requests will incur additional charges.": "При включении за нарушения будут начисляться дополнительные расходы.",
     "When enabled, zero-cost models also pre-consume quota before final settlement.": "При включении бесплатные модели также предварительно потребляют квоту до окончательного расчета.",
+    "No Charge for Empty Responses": "Не списывать за пустой ответ",
+    "When enabled, requests that produce no completion output (zero output tokens, i.e. an empty upstream response) are not charged at all.": "При включении запросы без сгенерированного ответа (ноль выходных токенов, пустой ответ вышестоящего сервиса) не тарифицируются вовсе.",
     "When no conditions are set, the operation always executes.": "Без условий операция выполняется всегда.",
     "When performance monitoring is enabled and system resource usage exceeds the set threshold, new Relay requests will be rejected.": "Когда мониторинг включён и использование ресурсов превышает порог, новые Relay-запросы будут отклонены.",
     "When running in containers or ephemeral environments, ensure the SQLite file is mapped to persistent storage to avoid data loss on restart.": "При работе в контейнерах или эфемерных средах убедитесь, что файл SQLite сопоставлен с постоянным хранилищем, чтобы избежать потери данных при перезапуске.",

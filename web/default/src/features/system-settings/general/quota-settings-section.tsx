@@ -58,6 +58,7 @@ const quotaSchema = z.object({
   }),
   quota_setting: z.object({
     enable_free_model_pre_consume: z.boolean(),
+    enable_empty_response_no_charge: z.boolean(),
   }),
 })
 
@@ -229,6 +230,32 @@ export function QuotaSettingsSection({
                       <FormDescription>
                         {t(
                           'When enabled, zero-cost models also pre-consume quota before final settlement.'
+                        )}
+                      </FormDescription>
+                    </SettingsSwitchContent>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        disabled={updateOption.isPending}
+                      />
+                    </FormControl>
+                  </SettingsSwitchItem>
+                )}
+              />
+            </SettingsFormGridItem>
+
+            <SettingsFormGridItem span='full'>
+              <FormField
+                control={form.control}
+                name='quota_setting.enable_empty_response_no_charge'
+                render={({ field }) => (
+                  <SettingsSwitchItem>
+                    <SettingsSwitchContent>
+                      <FormLabel>{t('No Charge for Empty Responses')}</FormLabel>
+                      <FormDescription>
+                        {t(
+                          'When enabled, requests that produce no completion output (zero output tokens, i.e. an empty upstream response) are not charged at all.'
                         )}
                       </FormDescription>
                     </SettingsSwitchContent>

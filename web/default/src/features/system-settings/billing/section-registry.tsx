@@ -68,6 +68,8 @@ const BILLING_SECTIONS = [
           quota_setting: {
             enable_free_model_pre_consume:
               settings['quota_setting.enable_free_model_pre_consume'],
+            enable_empty_response_no_charge:
+              settings['quota_setting.enable_empty_response_no_charge'],
           },
         }}
         complianceConfirmed={

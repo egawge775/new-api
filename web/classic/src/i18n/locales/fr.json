@@ -1284,6 +1284,8 @@
     "密钥预览": "Aperçu de la clé",
     "对于官方渠道，new-api已经内置地址，除非是第三方代理站点或者Azure的特殊接入地址，否则不需要填写": "Pour les canaux officiels, le new-api a une adresse intégrée. Sauf s'il s'agit d'un site proxy tiers ou d'une adresse d'accès Azure spéciale, il n'est pas nécessaire de la remplir",
     "对免费模型启用预消耗": "Activer la préconsommation pour les modèles gratuits",
+    "空回不扣费": "Aucun frais pour les réponses vides",
+    "开启后，上游没有返回任何补全内容（输出 token 为 0，即空回）的请求完全不扣费，已预扣的额度会全额退回": "Lorsqu'elle est activée, les requêtes sans contenu de complétion (zéro token de sortie, réponse vide de l'amont) ne sont pas facturées et le quota pré-consommé est remboursé.",
     "对域名启用 IP 过滤（推荐开启）": "Activer le filtrage IP pour les domaines (recommandé)",
     "对外运营模式": "Mode par défaut",
     "对比：不勾选「用户可选」的场景": "Comparison: groups without \"User Selectable\"",

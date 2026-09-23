@@ -4538,6 +4538,8 @@
     "When enabled, users can pick this group when creating tokens.": "When enabled, users can pick this group when creating tokens.",
     "When enabled, violation requests will incur additional charges.": "When enabled, violation requests will incur additional charges.",
     "When enabled, zero-cost models also pre-consume quota before final settlement.": "When enabled, zero-cost models also pre-consume quota before final settlement.",
+    "No Charge for Empty Responses": "No Charge for Empty Responses",
+    "When enabled, requests that produce no completion output (zero output tokens, i.e. an empty upstream response) are not charged at all.": "When enabled, requests that produce no completion output (zero output tokens, i.e. an empty upstream response) are not charged at all.",
     "When no conditions are set, the operation always executes.": "When no conditions are set, the operation always executes.",
     "When performance monitoring is enabled and system resource usage exceeds the set threshold, new Relay requests will be rejected.": "When performance monitoring is enabled and system resource usage exceeds the set threshold, new Relay requests will be rejected.",
     "When running in containers or ephemeral environments, ensure the SQLite file is mapped to persistent storage to avoid data loss on restart.": "When running in containers or ephemeral environments, ensure the SQLite file is mapped to persistent storage to avoid data loss on restart.",

@@ -1272,6 +1272,8 @@
     "密钥预览": "Xem trước khóa",
     "对于官方渠道，new-api已经内置地址，除非是第三方代理站点或者Azure的特殊接入地址，否则不需要填写": "Đối với các kênh chính thức, new-api đã tích hợp sẵn địa chỉ. Trừ khi đó là trang web proxy của bên thứ ba hoặc địa chỉ truy cập đặc biệt của Azure, không cần điền vào",
     "对免费模型启用预消耗": "Enable pre-consumption for free models",
+    "空回不扣费": "Không tính phí cho phản hồi rỗng",
+    "开启后，上游没有返回任何补全内容（输出 token 为 0，即空回）的请求完全不扣费，已预扣的额度会全额退回": "Khi được bật, các yêu cầu không trả về nội dung hoàn thành (0 token đầu ra, tức phản hồi rỗng từ upstream) sẽ không bị tính phí và hạn mức đã trừ trước được hoàn lại toàn bộ.",
     "对域名启用 IP 过滤（推荐开启）": "Bật lọc IP cho tên miền (khuyến nghị)",
     "对外运营模式": "Chế độ mặc định",
     "对比：不勾选「用户可选」的场景": "Comparison: groups without \"User Selectable\"",

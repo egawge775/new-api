@@ -1288,6 +1288,8 @@
     "密钥预览": "Key preview",
     "对于官方渠道，new-api已经内置地址，除非是第三方代理站点或者Azure的特殊接入地址，否则不需要填写": "For official channels, the new-api has a built-in address. Unless it is a third-party proxy site or a special Azure access address, there is no need to fill it in",
     "对免费模型启用预消耗": "Enable pre-consumption for free models",
+    "空回不扣费": "No charge for empty responses",
+    "开启后，上游没有返回任何补全内容（输出 token 为 0，即空回）的请求完全不扣费，已预扣的额度会全额退回": "When enabled, requests that return no completion content (zero output tokens, i.e. an empty upstream response) are not charged at all; any pre-consumed quota is refunded.",
     "对域名启用 IP 过滤（推荐开启）": "Enable IP filtering for domains (recommended)",
     "对外运营模式": "Default mode",
     "对比：不勾选「用户可选」的场景": "Comparison: groups without \"User Selectable\"",
