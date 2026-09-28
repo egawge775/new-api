@@ -83,23 +83,92 @@ func ClaudeErrorWrapperLocal(err error, code string, statusCode int) *dto.Claude
 	return claudeErr
 }
 
+// NoAvailableAccountsMessage 上游额度耗尽 / 限流类错误对外统一返回的固定文案。
+const NoAvailableAccountsMessage = "bad response status code 503, message: No available accounts: no available accounts"
+
+// isUpstreamQuotaOrRateLimitStatus 判断状态码是否属于上游额度耗尽 / 限流类错误。
+func isUpstreamQuotaOrRateLimitStatus(statusCode int) bool {
+	switch statusCode {
+	case http.StatusPaymentRequired,
+		http.StatusTooManyRequests,
+		http.StatusForbidden,
+		http.StatusServiceUnavailable:
+		return true
+	default:
+		return false
+	}
+}
+
+// NoAvailableAccountsError 构造「上游账号池不可用」统一错误：HTTP 503 + 固定文案。
+func NoAvailableAccountsError() *types.NewAPIError {
+	return types.NewOpenAIError(
+		errors.New(NoAvailableAccountsMessage),
+		types.ErrorCodeBadResponseStatusCode,
+		http.StatusServiceUnavailable,
+	)
+}
+
+// IsNoAvailableAccountsError 判断错误是否已经是统一改写后的「No available accounts」错误。
+func IsNoAvailableAccountsError(err *types.NewAPIError) bool {
+	if err == nil {
+		return false
+	}
+	return strings.Contains(err.Error(), "No available accounts")
+}
+
+// IsLocalQuotaInsufficientError 判断错误是否为本站（而非上游）产生的额度不足错误。
+//
+// 只有本站自己生成的错误才算本站额度不足：
+// 上游站点返回的 429 / 402 即使 code 也写作 insufficient_user_quota，也属于「上游额度不足」，
+// 必须继续按上游账号池不可用处理，不能暴露给本站用户。
+//
+// 覆盖场景：本站用户钱包余额不足、订阅额度不足、令牌额度不足。
+func IsLocalQuotaInsufficientError(err *types.NewAPIError) bool {
+	if err == nil {
+		return false
+	}
+	if err.GetErrorType() != types.ErrorTypeNewAPIError {
+		return false
+	}
+	switch err.GetErrorCode() {
+	case types.ErrorCodeInsufficientUserQuota, types.ErrorCodePreConsumeTokenQuotaFailed:
+		return true
+	default:
+		return false
+	}
+}
+
 // remapPaymentRequiredError 将上游返回的额度耗尽类报错（402 / 429 / 403 / 503）统一改写为
 // 503，并替换为固定提示。返回新的错误（命中时）或原错误（未命中时）。
 func remapPaymentRequiredError(newApiErr *types.NewAPIError) *types.NewAPIError {
 	if newApiErr == nil {
 		return newApiErr
 	}
-	if newApiErr.StatusCode != http.StatusPaymentRequired &&
-		newApiErr.StatusCode != http.StatusTooManyRequests &&
-		newApiErr.StatusCode != http.StatusForbidden &&
-		newApiErr.StatusCode != http.StatusServiceUnavailable {
+	if !isUpstreamQuotaOrRateLimitStatus(newApiErr.StatusCode) {
 		return newApiErr
 	}
-	return types.NewOpenAIError(
-		errors.New("bad response status code 503, message: No available accounts: no available accounts"),
-		types.ErrorCodeBadResponseStatusCode,
-		http.StatusServiceUnavailable,
-	)
+	return NoAvailableAccountsError()
+}
+
+// FinalizeRelayError 决定最终返回给客户端的错误，是 relay 出口唯一的错误改写入口：
+//
+//  1. 本站用户额度不足（钱包 / 订阅 / 令牌）-> 保留原始提示，状态码 429；
+//  2. 其余上游额度耗尽 / 限流类错误（402 / 429 / 403 / 503，或已是固定文案）-> 503 + 固定文案；
+//  3. 其他错误 -> 原样返回。
+//
+// 这样调用方可以区分「自己的额度用完，需要充值」（429）与「本站上游账号池不可用」（503）。
+func FinalizeRelayError(err *types.NewAPIError) *types.NewAPIError {
+	if err == nil {
+		return nil
+	}
+	if IsLocalQuotaInsufficientError(err) {
+		err.StatusCode = http.StatusTooManyRequests
+		return err
+	}
+	if IsNoAvailableAccountsError(err) || isUpstreamQuotaOrRateLimitStatus(err.StatusCode) {
+		return NoAvailableAccountsError()
+	}
+	return err
 }
 
 func RelayErrorHandler(ctx context.Context, resp *http.Response, showBodyWhenFail bool) (newApiErr *types.NewAPIError) {
